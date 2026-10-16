@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuiz RBT Tingkatan 1 - Bab 3: Proses Reka Bentuk</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --text: #1f2937;
+            --border: #e5e7eb;
+            --correct: #10b981;
+            --wrong: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 700px;
+            padding: 30px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary);
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+            background: #eef2ff;
+            padding: 10px 15px;
+            border-radius: 8px;
+        }
+
+        .timer {
+            color: #dc2626;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .option-btn {
+            background: #f9fafb;
+            border: 1px solid var(--border);
+            padding: 12px 15px;
+            border-radius: 6px;
+            text-align: left;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background: #edf2f7;
+        }
+
+        .option-btn.selected {
+            border-color: var(--primary);
+            background: #eef2ff;
+            font-weight: 600;
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .score-board {
+            margin-top: 25px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+        }
+
+        .score-board h3 {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: #f8fafc;
+        }
+
+        .result-box {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .result-box h2 {
+            font-size: 2rem;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <header>
+        <h1>Kuiz RBT Tingkatan 1</h1>
+        <p>Bab 3: Proses Reka Bentuk (50 Soalan)</p>
+    </header>
+
+    <!-- 1. SKRIN MULA -->
+    <div id="start-screen" class="screen active">
+        <div class="input-group">
+            <label for="username">Masukkan Nama Anda:</label>
+            <input type="text" id="username" placeholder="Contoh: Ahmad Zaki" autocomplete="off">
+        </div>
+        <button class="btn" onclick="startQuiz()">Mula Kuiz</button>
+
+        <div class="score-board">
+            <h3>Papan Skor Pemain (Top Scores)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nama Pemain</th>
+                        <th>Skor</th>
+                        <th>Masa</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body-start">
+                    <!-- Skor dimasukkan melalui JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 2. SKRIN SOALAN -->
+    <div id="quiz-screen" class="screen">
+        <div class="quiz-header">
+            <div>Soalan <span id="current-question-num">1</span>/50</div>
+            <div class="timer">Masa: <span id="time-display">00:00</span></div>
+        </div>
+
+        <div class="question-text" id="question-text">
+            Teks soalan akan dipaparkan di sini...
+        </div>
+
+        <div class="options-container" id="options-container">
+            <!-- Pilihan jawapan dipaparkan di sini -->
+        </div>
+
+        <div class="footer-nav">
+            <button class="btn" id="next-btn" onclick="nextQuestion()" disabled>Seterusnya</button>
+        </div>
+    </div>
+
+    <!-- 3. SKRIN KEPUTUSAN -->
+    <div id="result-screen" class="screen">
+        <div class="result-box">
+            <p>Tahniah, <span id="player-result-name" style="font-weight: bold;"></span>!</p>
+            <h2>Skor Anda: <span id="final-score">0</span> / 50</h2>
+            <p>Masa Diambil: <span id="time-taken">00:00</span></p>
+        </div>
+
+        <button class="btn" onclick="restartQuiz()">Cuba Lagi</button>
+
+        <div class="score-board">
+            <h3>Papan Skor Pemain</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nama Pemain</th>
+                        <th>Skor</th>
+                        <th>Masa</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body-end">
+                    <!-- Skor dimasukkan melalui JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Bank 50 Soalan RBT Tingkatan 1 Bab 3 (Proses Reka Bentuk)
+    const rawQuestions = [
+        { q: "Apakah definisi projek brief?", options: ["Proses perbincangan awal antara pengurus projek dengan pelanggan", "Proses menghasilkan lakoran akhir", "Proses membuat ujian ke atas mock-up", "Proses memasarkan produk"], answer: 0 },
+        { q: "Kriteria projek brief merangkumi perkara berikut, KECUALI...", options: ["Iklan dan promosi", "Tujuan pasar", "Kualiti produk", "Kos projek"], answer: 0 },
+        { q: "Apakah fungsi utama borang projek brief?", options: ["Draf kerja yang mengandungi maklumat penting berkaitan projek", "Sebagai surat perjanjian jual beli", "Sebagai manual pengguna produk", "Sebagai borang aduan pelanggan"], answer: 0 },
+        { q: "Manakah antara berikut MERUPAKAN kriteria projek brief?", options: ["Ciri-ciri produk", "Jenis pembungkusan luaran", "Lesen perniagaan", "Ulasan pengguna lain"], answer: 0 },
+        { q: "Perancangan pengurusan projek merangkumi tiga elemen utama iaitu...", options: ["Skop kerja, tempoh masa, kos projek", "Harga, kualiti, kuantiti", "Bahan, alatan, tenaga kerja", "Reka bentuk, saiz, warna"], answer: 0 },
+        { q: "Apakah maksud 'Mock-up'?", options: ["Model olahan saiz sebenar atau mengikut skala yang dibuat sebelum model berfungsi sepenuhnya", "Produk sebenar yang sedia dijual", "Lukisan lakaran 3D di atas kertas", "Pembungkusan hiasan untuk hadiah"], answer: 0 },
+        { q: "Apakah perbezaan utama antara mock-up dan model berfungsi sepenuhnya?", options: ["Mock-up tidak menunjukkan fungsi sebenar, manakala model berfungsi boleh bergerak/berfungsi", "Mock-up menggunakan bahan mahal", "Model berfungsi dibuat daripada kertas sahaja", "Tiada perbezaan langsung"], answer: 0 },
+        { q: "Apakah tujuan pengujian mock-up dilakukan?", options: ["Mengukur tahap keberkesanan dan kekuatan reka bentuk", "Menentukan harga jualan", "Untuk ditunjukkan kepada pembeli sahaja", "Untuk dikaji oleh pihak pesaing"], answer: 0 },
+        { q: "Antara bahan berikut, yang manakah selalunya digunakan untuk membuat mock-up?", options: ["Kadbod, polistirena, dan kadbod gelombang", "Batu bata dan simen", "Kaca tebal dan keluli", "Plastik industri berat"], answer: 0 },
+        { q: "Apakah langkah pertama dalam menyediakan borang projek brief?", options: ["Menyediakan senarai semak kriteria pertimbangan utama", "Membuat mock-up", "Menentukan harga pasaran", "Membeli bahan mentah"], answer: 0 },
+        { q: "Dalam borang projek brief, soalan 'Siapakah yang akan menggunakannya?' tergolong di bawah kriteria...", options: ["Tujuan pasar", "Kualiti", "Kos", "Gaya/Gaya hidup"], answer: 0 },
+        { q: "Soalan berkaitan 'Berapakah kos untuk menghasilkan satu unit produk?' berkaitan dengan kriteria...", options: ["Kos projek", "Gaya", "Kuantiti", "Fungsi"], answer: 0 },
+        { q: "Menentukan jumlah unit yang perlu dihasilkan dalam projek brief dinamakan...", options: ["Kuantiti", "Kualiti", "Kos", "Jangka masa"], answer: 0 },
+        { q: "Mengapakah perbincangan awal antara pengurus projek dan pelanggan sangat penting?", options: ["Untuk menterjemahkan idea pelanggan kepada bentuk lakaran/reka bentuk", "Untuk meminta bayaran penuh projek", "Untuk mengurangkan bilangan pekerja", "Untuk melambatkan proses pembinaan"], answer: 0 },
+        { q: "Model olok-olok yang dibina sebelum model sebenar dipanggil...", options: ["Mock-up", "Prototaip", "Sketsa", "Blue print"], answer: 0 },
+        { q: "Antara berikut, yang manakah BUKAN alat cantuman untuk menghasilkan mock-up?", options: ["Pahat kayu", "Pistol perekat panas (Hot glue gun)", "Pita pelekat", "Gam kayu"], answer: 0 },
+        { q: "Apakah kegunaan pisau pemotong (utility knife) dalam penyediaan mock-up?", options: ["Memotong bahan nipis seperti kadbod dan bod impra", "Mengikat dua bahan berbeza", "Mencantumkan kepingan kayu tebal", "Mewarnakan permukaan mock-up"], answer: 0 },
+        { q: "Bahan apakah yang sangat sesuai untuk membuat mock-up produk berstruktur ringan?", options: ["Foam (Gabus / Polistirena)", "Besi tuang", "Kepingan zink", "Simen pasir"], answer: 0 },
+        { q: "Penyataan 'Produk ini direka bentuk untuk pelajar sekolah' adalah merujuk kepada borang projek brief bahagian...", options: ["Sasaran pengguna", "Kos pengeluaran", "Kelajuan fungsi", "Saiz fizikal"], answer: 0 },
+        { q: "Mengapakah mock-up perlu dinilai dari segi bentuk dan kestabilan?", options: ["Untuk memastikan keselamatan dan kesesuaian reka bentuk asas", "Untuk menetapkan tarikh siap projek", "Untuk memilih warna cat akhir", "Untuk pendaftaran hak cipta"], answer: 0 },
+        { q: "Antara berikut, yang manakah kaedah ujian yang boleh dilakukan ke atas mock-up?", options: ["Ujian kekuatan cantuman dan ujian kestabilan", "Ujian ketahanan suhu panas melampau", "Ujian jualan di pasar raya", "Ujian ketahanan kimia berasid"], answer: 0 },
+        { q: "Aktiviti menghasilkan jadual kerja (Gantt chart) tergolong dalam pengurusan...", options: ["Langkah perancangan projek", "Fasa perbandingan mock-up", "Fasa pemasaran", "Peringkat jualan akhir"], answer: 0 },
+        { q: "Aplikasi teknologi dalam projek brief bermaksud...", options: ["Menggabungkan pelbagai cabang ilmu teknologi dalam produk", "Menggunakan mesin canggih sahaja", "Menggunakan aplikasi telefon untuk mempromosikan produk", "Menjual produk secara dalam talian"], answer: 0 },
+        { q: "Apakah elemen penting dalam menyediakan lakaran akhir selepas projek brief?", options: ["Lakaran yang memaparkan dimensi, bahan, dan perincian reka bentuk", "Lakaran conteng kasar di kertas surat khabar", "Foto produk siap dari internet", "Senarai kedai yang menjual bahan"], answer: 0 },
+        { q: "Analisis borang projek brief dilakukan dengan cara...", options: ["Menyaring dan menyusun maklumat daripada borang projek brief", "Membuang jawapan pelanggan yang tidak disukai", "Menjual borang kepada pihak ketiga", "Mengubah jawapan pelanggan secara rahsia"], answer: 0 },
+        { q: "Manakah antara berikut BUKAN jenis model dalam proses reka bentuk?", options: ["Model Jualan", "Mock-up", "Model berfungsi sebahagian", "Model berfungsi sepenuhnya"], answer: 0 },
+        { q: "Model berfungsi sebahagian juga dikenali sebagai...", options: ["Model blok / Model penampilan", "Model jualan", "Mock-up akhir", "Produk komersial"], answer: 0 },
+        { q: "Apakah fungsi Model Berfungsi Sepenuhnya?", options: ["Menunjukkan fungsi sebenar keseluruhan produk mengikut skala atau saiz sebenar", "Hanya menunjukkan rupa paras luaran sahaja tanpa fungsi", "Dibuat daripada kertas mudah koyak", "Dihasilkan secara pukal untuk dijual"], answer: 0 },
+        { q: "Mengapa pereka bentuk menggunakan bod impra (impra board) dalam pembinaan mock-up?", options: ["Kerana ia ringan, kalis air, dan mudah dipotong", "Kerana ia sangat berat dan tebal", "Kerana harganya terlalu mahal", "Kerana ia tidak boleh dibentuk"], answer: 0 },
+        { q: "Proses 'Aplikasi projek brief dalam bentuk jadual dan lakaran' bertujuan...", options: ["Memudahkan pereka bentuk merancang fasa pembinaan produk secara sistematik", "Memasukkan kos pengiklanan", "Mendapatkan lesen perniagaan", "Menyenaraikan pesaing tempatan"], answer: 0 },
+        { q: "Apakah tujuan penyediaan jadual kerja dalam sesuatu projek?", options: ["Mengelakkan pembaziran masa dan mengawal susunan aktiviti", "Menentukan bilangan pembeli", "Mengurangkan saiz produk", "Menambah keuntungan syarikat"], answer: 0 },
+        { q: "Sekiranya ujian ke atas mock-up mendapati cantuman mudah tertanggal, apakah tindakan penambahbaikan yang sesuai?", options: ["Tukar perekat yang lebih sesuai atau kukuhkan bahagian cantuman", "Buang terus mock-up tersebut", "Kurangkan saiz produk", "Tukar sasaran pengguna"], answer: 0 },
+        { q: "Dalam kriteria projek brief, aspek 'Persembahan' bermaksud...", options: ["Bagaimana produk tersebut dipersembahkan atau dipamerkan kepada pelanggan", "Tarian atau hiburan semasa perasmian", "Cara promosi di televisyen sahaja", "Reka bentuk kad perniagaan"], answer: 0 },
+        { q: "Berdasarkan borang projek brief, siapakah yang menentukan bajet maksimum projek?", options: ["Pelanggan", "Pembekal bahan", "Pekerja kilang", "Pereka grafik luar"], answer: 0 },
+        { q: "Pencahayaan, estetika, dan kemasan produk tergolong di bawah kriteria borang projek brief bahagian...", options: ["Gaya / Persembahan", "Kos pengeluaran", "Jadual kerja", "Pengangkutan"], answer: 0 },
+        { q: "Pita selofan dan masking tape sesuai digunakan untuk...", options: ["Cantuman sementara semasa proses membina mock-up", "Cantuman kekal pada struktur besi", "Menatap bahagian enjin", "Memotong bahan nipis"], answer: 0 },
+        { q: "Soalan: 'Di manakah produk ini akan digunakan?' tergolong di bawah kriteria...", options: ["Tujuan pasar / Tempat penggunaan", "Gaji pekerja", "Jangka hayat bahan", "Cara pembungkusan"], answer: 0 },
+        { q: "Model yang dibina untuk menilai aspek rupa bentuk, saiz, dan warna tanpa fungsi dinamakan...", options: ["Model Blok / Penampilan", "Model Berfungsi Sepenuhnya", "Prototaip komersial", "Alatan tangan"], answer: 0 },
+        { q: "Apakah peranan pereka bentuk (designer) semasa sesi projek brief?", options: ["Mendengar, mencatat, dan mengemukakan cadangan penyelesaian kepada pelanggan", "Membayar kos penghasilan bagi pihak pelanggan", "Menjual barangan terpakai kepada pelanggan", "Memilih nama kedai pelanggan"], answer: 0 },
+        { q: "Antara berikut, yang manakah merupakan urutan proses reka bentuk yang betul?", options: ["Projek brief -> Lakaran -> Pembinaan Mock-up -> Pengujian/Penilaian", "Pembinaan Mock-up -> Projek brief -> Lakaran -> Pengujian", "Pengujian -> Lakaran -> Projek brief -> Pembinaan Mock-up", "Lakaran -> Pengujian -> Projek brief -> Pembinaan Mock-up"], answer: 0 },
+        { q: "Penyataan masalah dalam projek brief diperoleh daripada...", options: ["Hasil perbincangan awal bersama pelanggan", "Buku teks RBT", "Carian maklumat di majalah hiburan", "Teka-teki harian"], answer: 0 },
+        { q: "Semasa membuat pengujian mock-up beban, parameternya ialah...", options: ["Berat beban yang mampu ditampung oleh mock-up", "Warna cat mock-up", "Harga jual mock-up", "Kelajuan pergerakan air"], answer: 0 },
+        { q: "Mengapakah boring penilaian pengujian mock-up disediakan?", options: ["Untuk mengumpul data kuantitatif dan kualitatif tentang kelemahan mock-up", "Untuk mengira gaji jawatankuasa", "Untuk diedarkan sebagai risalah promosi", "Untuk dijual kepada persatuan pengeluar"], answer: 0 },
+        { q: "Manakah antara berikut BUKAN bahan kemasan untuk mock-up?", options: ["Pistol pemotong", "Cat semburan", "Kertas pelekat berwarna", "Pelekat hiasan"], answer: 0 },
+        { q: "Mock-up dibina dalam bentuk...", options: ["3 Dimensi (3D)", "2 Dimensi (2D) sahaja", "Teks bertulis sahaja", "Jadual nombor"], answer: 0 },
+        { q: "Senarai semak dalam borang projek brief berfungsi sebagai...", options: ["Panduan untuk memastikan tiada maklumat penting yang tertinggal", "Senarai barang keperluan dapur", "Senarai nama pekerja kilang", "Resit pembelian bahan"], answer: 0 },
+        { q: "Jika mock-up diperbuat daripada kadbod tidak mampu berdiri seimbang, kelemahan ini dikesan melalui ujian...", options: ["Ujian kestabilan", "Ujian ketahanan air", "Ujian kepanasan", "Ujian warna"], answer: 0 },
+        { q: "Apakah langkah terakhir dalam aliran kerja projek brief?", options: ["Membuat penambahbaikan dan menyediakan laporan akhir", "Membuang semua lakaran awal", "Menukar tajuk projek", "Membeli alatan baharu"], answer: 0 },
+        { q: "Proses memilih idea terbaik daripada beberapa lakaran perkembangan dinamakan...", options: ["Pilihan lakaran akhir", "Penyediaan bajet", "Sesi fotografi", "Ujian pasaran"], answer: 0 },
+        { q: "Apakah kelebihan utama menggunakan mock-up sebelum menghasilkan produk sebenar?", options: ["Dapat mengesan kecacatan reka bentuk lebih awal tanpa melibatkan kos besar", "Dapat dijual terus kepada pembeli dengan harga mahal", "Menjimatkan penggunaan tenaga elektrik kilang", "Memanjangkan tempoh pembinaan produk"], answer: 0 }
+    ];
+
+    // Pembolehubah Global State
+    let quizQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let selectedOption = null;
+    let playerName = "";
+    let timerInterval = null;
+    let timeSeconds = 0;
+
+    // Fungsi Mengacak susunan tatasusunan (Fisher-Yates Shuffle)
+    function shuffleArray(array) {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    // Mengacak soalan dan pilihan jawapan supaya tidak tertumpu pada A sahaja
+    function prepareQuestions() {
+        const shuffledQ = shuffleArray(rawQuestions);
+        
+        return shuffledQ.map(q => {
+            // Cipta senarai objek {text, originalIndex}
+            const optionsObjs = q.options.map((opt, idx) => ({
+                text: opt,
+                isCorrect: idx === q.answer
+            }));
+
+            // Acak pilihan jawapan
+            const shuffledOptions = shuffleArray(optionsObjs);
+
+            return {
+                question: q.q,
+                options: shuffledOptions.map(o => o.text),
+                correctIndex: shuffledOptions.findIndex(o => o.isCorrect)
+            };
+        });
+    }
+
+    // Fungsi Mula Kuiz
+    function startQuiz() {
+        const nameInput = document.getElementById('username').value.trim();
+        if (!nameInput) {
+            alert('Sila masukkan nama anda terlebih dahulu!');
+            return;
+        }
+
+        playerName = nameInput;
+        quizQuestions = prepareQuestions();
+        currentQuestionIndex = 0;
+        score = 0;
+        timeSeconds = 0;
+
+        showScreen('quiz-screen');
+        startTimer();
+        loadQuestion();
+    }
+
+    // Kawalan Paparan Skrin
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+
+        if (screenId === 'start-screen') {
+            loadLeaderboard('leaderboard-body-start');
+        } else if (screenId === 'result-screen') {
+            loadLeaderboard('leaderboard-body-end');
+        }
+    }
+
+    // Fungsi Pemasa
+    function startTimer() {
+        clearInterval(timerInterval);
+        document.getElementById('time-display').innerText = "00:00";
+        timerInterval = setInterval(() => {
+            timeSeconds++;
+            const mins = Math.floor(timeSeconds / 60).toString().padStart(2, '0');
+            const secs = (timeSeconds % 60).toString().padStart(2, '0');
+            document.getElementById('time-display').innerText = `${mins}:${secs}`;
+        }, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+    }
+
+    // Muat Soalan Semasa
+    function loadQuestion() {
+        const qData = quizQuestions[currentQuestionIndex];
+        document.getElementById('current-question-num').innerText = currentQuestionIndex + 1;
+        document.getElementById('question-text').innerText = `${currentQuestionIndex + 1}. ${qData.question}`;
+
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = '';
+        selectedOption = null;
+
+        const nextBtn = document.getElementById('next-btn');
+        nextBtn.disabled = true;
+        nextBtn.innerText = (currentQuestionIndex === quizQuestions.length - 1) ? "Hantar & Tamat" : "Seterusnya";
+
+        const labels = ['A', 'B', 'C', 'D'];
+        qData.options.forEach((optText, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerHTML = `<strong>${labels[idx]}.</strong> ${optText}`;
+            btn.onclick = () => selectOption(idx, btn);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    // Pilih Jawapan
+    function selectOption(index, btnElement) {
+        selectedOption = index;
+        document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+        btnElement.classList.add('selected');
+        document.getElementById('next-btn').disabled = false;
+    }
+
+    // Soalan Seterusnya / Tamat
+    function nextQuestion() {
+        if (selectedOption === null) return;
+
+        // Semak Jawapan
+        if (selectedOption === quizQuestions[currentQuestionIndex].correctIndex) {
+            score++;
+        }
+
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < quizQuestions.length) {
+            loadQuestion();
+        } else {
+            finishQuiz();
+        }
+    }
+
+    // Tamat Kuiz & Simpan Keputusan
+    function finishQuiz() {
+        stopTimer();
+        
+        const mins = Math.floor(timeSeconds / 60).toString().padStart(2, '0');
+        const secs = (timeSeconds % 60).toString().padStart(2, '0');
+        const formattedTime = `${mins}:${secs}`;
+
+        document.getElementById('player-result-name').innerText = playerName;
+        document.getElementById('final-score').innerText = score;
+        document.getElementById('time-taken').innerText = formattedTime;
+
+        // Simpan ke LocalStorage
+        saveScore(playerName, score, formattedTime, timeSeconds);
+
+        showScreen('result-screen');
+    }
+
+    // Simpan Skor ke LocalStorage
+    function saveScore(name, score, timeFormatted, timeSecs) {
+        let leaderboard = JSON.parse(localStorage.getItem('rbt_quiz_leaderboard')) || [];
+        leaderboard.push({
+            name: name,
+            score: score,
+            timeStr: timeFormatted,
+            timeSecs: timeSecs,
+            date: new Date().toLocaleDateString('ms-MY')
+        });
+
+        // Susun skor tertinggi dahulu, jika skor sama susun mengikut masa terpantas
+        leaderboard.sort((a, b) => {
+            if (b.score !== a.score) {
+                return b.score - a.score;
+            }
+            return a.timeSecs - b.timeSecs;
+        });
+
+        // Simpan sehingga 20 rekod tertinggi sahaja
+        leaderboard = leaderboard.slice(0, 20);
+
+        localStorage.setItem('rbt_quiz_leaderboard', JSON.stringify(leaderboard));
+    }
+
+    // Muat Papan Skor
+    function loadLeaderboard(targetTbodyId) {
+        const leaderboard = JSON.parse(localStorage.getItem('rbt_quiz_leaderboard')) || [];
+        const tbody = document.getElementById(targetTbodyId);
+        tbody.innerHTML = '';
+
+        if (leaderboard.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#6b7280;">Belum ada rekod pemain.</td></tr>`;
+            return;
+        }
+
+        leaderboard.forEach((data, idx) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${idx + 1}</td>
+                <td>${escapeHtml(data.name)}</td>
+                <td><strong>${data.score}</strong> / 50</td>
+                <td>${data.timeStr}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function escapeHtml(text) {
+        return text.replace(/[&<>"']/g, function(m) {
+            return {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            }[m];
+        });
+    }
+
+    function restartQuiz() {
+        document.getElementById('username').value = '';
+        showScreen('start-screen');
+    }
+
+    // Muat Papan Skor pada awal muatan laman
+    window.onload = function() {
+        loadLeaderboard('leaderboard-body-start');
+    };
+</script>
+
+</body>
+</html>
